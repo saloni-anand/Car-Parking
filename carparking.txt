@@ -1,0 +1,181 @@
+//**********SOURCE CODE FOR CAR PARKING SYSTEM IN CPP************//
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+#include<iostream>
+using namespace std;
+#include<conio.h>
+#include<string.h>
+#include<process.h>
+#include<stdio.h>
+#include<fstream>
+class car_parking
+{
+	public:
+	int vehicle_no;
+	int time_slot;
+	float hours;
+	char  driver_name[20];
+	
+	void input()
+	{
+		system("CLS");
+		cout<<"\n\n\t\tEnter the name of driver : ";
+		cin>>driver_name;
+		cout<<"\n\n\t\tEnter the car no : ";
+		cin>>vehicle_no;
+		cout<<"\n\n\t\tEnter the no of hours of stay : ";
+		cin>>hours;
+		cout<<"\n\n\t\tEnter the time slot : ";
+		cin>>time_slot;
+		if(hours<8)
+   			{
+   				cout<<"\n\n\t\t Parking Available - Car Parked ";
+   			}
+   			else
+   				cout<<"\n\n\t\t Parking not possible";
+		
+	}
+
+
+
+	void cal()
+	{
+		system("CLS");
+		cout<<"\n\t\n\tThe total cost of parking  ";
+		cout<<hours*50<<" rupees";
+    }
+
+
+	void output()
+	{
+		cout<<"\n\n\t Driver Name : "<<driver_name<<endl;
+		cout<<"\n\n\t Car No. : "<<vehicle_no<<endl;
+		cout<<"\n\n\t Hours Of Stay : " <<hours;
+		cout<<"\n\n\t Time Slot Of Parking : " <<time_slot<<endl;
+		cout<<"\n";
+		system("PAUSE");
+		cout<<"\n";
+	}
+}a;
+
+
+
+
+void delete_record()
+{
+	int remove_car;
+	system("CLS");
+	cout<<"\n\n\t\tEnter the car no. to be removed: ";
+	cin>>remove_car;
+	ifstream inFile;
+    inFile.open("parking3.dat", ios::binary);
+	ofstream outFile;
+    outFile.open("temp.dat", ios::out | ios::binary);
+    while(inFile.read((char*)&a, sizeof(a)))
+    {
+        if(a.vehicle_no!= remove_car)
+        {	
+            outFile.write((char*)&a, sizeof(a));
+        }
+    }
+    cout<<"\n\n\t\t Parking Record Deleted";
+
+    inFile.close();
+    outFile.close();
+    
+    remove("parking3.dat");
+    rename("temp.dat", "parking3.dat");
+}
+
+
+
+
+int main()
+{
+	int choice,pos;
+	while(1) 
+	{
+	system("CLS");
+
+     cout << "\n\n\t\t\t\t\t\t\t  CAR PARKING SYSTEM";
+     cout <<"\n\n                                          ";
+     cout << "\n\n\t\t  1. Arrival of a Car";
+     cout << "\n\n\t\t  2. Total no of cars Arrived";
+     cout << "\n\n\t\t  3. Total parking charges of all cars with details";
+     cout << "\n\n\t\t  4. Departure of a car";
+     cout << "\n\n\t\t  5. Exit Program";
+     cout << "\n\n";
+     cout << "\t\t\t Select Your Choice :";
+     cin>>choice;
+     switch(choice)
+     {
+      case 1 :
+        {		
+				ofstream f1("parking3.dat",ios::binary|ios::out|ios::app);
+                a.input();
+                f1.write((char*)&a,sizeof(a));
+            	break;
+        }
+        
+        
+       case 2 :
+           {
+           	system("CLS");
+  		   cout << "\n\n\t\tno cars in the parking lot";
+           cout << "\n";
+           ifstream infile("parking3.dat",ios::binary|ios::in);
+           int pos=1;
+           while (infile.read((char *)&a,sizeof (a)))
+		   {
+		system("CLS");
+           cout << "\n";
+           cout<<"\n\n\tThe Car position in parking lot : "<<pos;
+           pos++;
+           a.output();
+           cout<<"\n";
+           cout<<"\n\n\n";
+           system("PAUSE");
+           cout<<endl;
+       	   }
+           break;
+       	   }   
+       	   
+    	case 3:
+		{
+				ifstream infile("parking3.dat",ios::binary|ios::in);
+           while (infile.read((char *)&a,sizeof (a)))
+		   {
+             cout << "\n";
+			 a.cal();
+			 a.output();
+			 cout<<"\n";
+			 cout<<endl;
+			 
+       		}
+       		break;
+        }
+        
+   		
+   		case 4:	
+		   {
+		   delete_record();
+		   break;
+	       }
+	       
+   		case 5: 
+		   {
+		   	system("CLS");
+		   exit(0);
+   			break;
+   		   }
+   		   
+   		   
+   		default : 
+		   {
+		   cout<<"\n\n\t\t Invalid input";
+			cout<<"\n\n\t\tPress Enter to continue";
+   	       }
+      }
+getch();
+    }
+}
